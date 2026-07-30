@@ -23,4 +23,9 @@ export interface Rental {
   createdAt: string;
   updatedAt: string;
   gear?: GearItem;
+  customer?: {
+    id: string;
+    name: string;
+    email: string;
+  };
 }

@@ -1,6 +1,6 @@
 import { api } from "@/lib/axios";
 import { ApiResponse } from "@/types/api.types";
-import { Rental } from "@/types/rental.types";
+import { Rental, RentalStatus } from "@/types/rental.types";
 
 export const rentalApi = {
   createRental: async (data: {
@@ -13,7 +13,7 @@ export const rentalApi = {
   },
 
   // Gets all rentals (we will filter this on the frontend)
-  getRentals: async (): Promise<ApiResponse<Rental[]>> => {
+  getMyRentals: async (): Promise<ApiResponse<Rental[]>> => {
     const response = await api.get("/rentals");
     return response.data;
   },
@@ -21,6 +21,21 @@ export const rentalApi = {
   // Gets a specific rental order
   getRentalById: async (id: string): Promise<ApiResponse<Rental>> => {
     const response = await api.get(`/rentals/${id}`);
+    return response.data;
+  },
+  getProviderRentals: async (): Promise<ApiResponse<Rental[]>> => {
+    const response = await api.get("/provider/orders");
+    return response.data;
+  },
+
+  updateRentalStatus: async ({
+    id,
+    status,
+  }: {
+    id: string;
+    status: RentalStatus;
+  }): Promise<ApiResponse<Rental>> => {
+    const response = await api.patch(`/provider/orders/${id}`, { status });
     return response.data;
   },
 };

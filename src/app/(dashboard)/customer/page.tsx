@@ -4,7 +4,6 @@ import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { Loader2 } from "lucide-react";
 import { rentalApi } from "@/api/rental.api";
-import { useAuthStore } from "@/store/useAuthStore";
 import {
   Card,
   CardContent,
@@ -25,15 +24,12 @@ import {
 import { RentalStatus } from "@/types/rental.types";
 
 export default function CustomerDashboardPage() {
-  // 1. Get the logged-in user from our Zustand store
-  const { user } = useAuthStore();
-
-  // 2. Fetch ALL rentals from the backend
   const { data, isPending, isError, error } = useQuery({
-    queryKey: ["rentals"],
-    queryFn: rentalApi.getRentals,
+    queryKey: ["my-rentals"],
+    queryFn: rentalApi.getMyRentals,
   });
 
+  // Updated to match your exact UI Badge color specifications
   const getStatusBadge = (status: RentalStatus) => {
     switch (status) {
       case "PLACED":
@@ -77,24 +73,23 @@ export default function CustomerDashboardPage() {
     }
   };
 
-  if (isPending)
+  if (isPending) {
     return (
-      <div className="flex justify-center p-12">
+      <div className="flex justify-center items-center min-h-[60vh]">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
-  if (isError)
+  }
+
+  if (isError) {
     return (
-      <div className="p-12 text-center text-red-500">
+      <div className="container mx-auto p-8 text-center text-red-500">
         Failed to load rentals: {error.message}
       </div>
     );
+  }
 
-  // 3. Filter the rentals so the customer ONLY sees their own orders
-  const allRentals = data?.data || [];
-  const myRentals = allRentals.filter(
-    (rental) => rental.customerId === user?.id,
-  );
+  const rentals = data?.data || [];
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl">
@@ -115,7 +110,7 @@ export default function CustomerDashboardPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {myRentals.length === 0 ? (
+          {rentals.length === 0 ? (
             <div className="text-center py-8 text-gray-500">
               You haven &apos t rented any gear yet.
             </div>
@@ -132,15 +127,14 @@ export default function CustomerDashboardPage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {myRentals.map((rental) => (
+                  {rentals.map((rental) => (
                     <TableRow key={rental.id}>
                       <TableCell className="font-medium">
                         {rental.gear?.name || "Unknown Gear"}
                       </TableCell>
                       <TableCell>
                         <div className="text-sm">
-                          {new Date(rental.startDate).toLocaleDateString()}{" "}
-                          -{" "}
+                          {new Date(rental.startDate).toLocaleDateString()} -
                         </div>
                         <div className="text-sm">
                           {new Date(rental.endDate).toLocaleDateString()}
@@ -149,6 +143,7 @@ export default function CustomerDashboardPage() {
                       <TableCell>${rental.totalAmount}</TableCell>
                       <TableCell>{getStatusBadge(rental.status)}</TableCell>
                       <TableCell className="text-right">
+                        {/* Dynamic Action Buttons based on Status */}
                         {rental.status === "CONFIRMED" && (
                           <Link href={`/customer/payment/${rental.id}`}>
                             <Button
