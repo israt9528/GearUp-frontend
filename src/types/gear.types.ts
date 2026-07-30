@@ -1,0 +1,15 @@
+export interface Category {
+  id: string;
+  name: string;
+}
+
+export interface GearItem {
+  id: string;
+  name: string;
+  description: string;
+  pricePerDay: number;
+  category: string | Category;
+  imageUrl?: string;
+  providerId: string;
+  isAvailable: boolean;
+}
