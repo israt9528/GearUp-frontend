@@ -7,7 +7,7 @@ export interface GearItem {
   id: string;
   name: string;
   description: string;
-  pricePerDay: number;
+  price: number;
   category: string | Category;
   imageUrl?: string;
   providerId: string;

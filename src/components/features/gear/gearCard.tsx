@@ -47,7 +47,7 @@ export function GearCard({ gear }: GearCardProps) {
             </p>
           </div>
           <div className="text-right">
-            <span className="font-bold text-lg">${gear.pricePerDay}</span>
+            <span className="font-bold text-lg">${gear.price}</span>
             <span className="text-sm text-gray-500">/day</span>
           </div>
         </div>

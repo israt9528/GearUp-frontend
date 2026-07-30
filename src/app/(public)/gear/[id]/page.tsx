@@ -1,6 +1,6 @@
 "use client";
 
-import { use } from "react"; // 1. Import the 'use' hook from React
+import { use } from "react";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
@@ -89,7 +89,7 @@ export default function GearDetailsPage({
             </h1>
 
             <div className="text-3xl font-bold text-primary mb-6">
-              ${gear.pricePerDay}{" "}
+              ${gear.price}{" "}
               <span className="text-lg text-gray-500 font-normal">/ day</span>
             </div>
 
@@ -104,13 +104,20 @@ export default function GearDetailsPage({
           </div>
 
           <div className="mt-auto pt-6 border-t">
-            <Button
-              size="lg"
-              className="w-full text-lg h-14"
-              disabled={!gear.isAvailable}
-            >
-              {gear.isAvailable ? "Select Dates & Rent" : "Not Available"}
-            </Button>
+            {gear.isAvailable ? (
+              <Link
+                href={`/customer/checkout/${gear.id}`}
+                className="block w-full"
+              >
+                <Button size="lg" className="w-full text-lg h-14">
+                  Select Dates & Rent
+                </Button>
+              </Link>
+            ) : (
+              <Button size="lg" className="w-full text-lg h-14" disabled>
+                Not Available
+              </Button>
+            )}
             <p className="text-center text-sm text-gray-500 mt-3">
               You will not be charged yet.
             </p>
