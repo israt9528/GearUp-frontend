@@ -70,10 +70,15 @@ export default function CheckoutPage({
     if (totalDays <= 0) {
       return toast.error("End date must be after start date");
     }
+
+    // Convert 'YYYY-MM-DD' into a strict ISO datetime string for the backend
+    const isoStartDate = new Date(data.startDate).toISOString();
+    const isoEndDate = new Date(data.endDate).toISOString();
+
     mutation.mutate({
       gearId,
-      startDate: data.startDate,
-      endDate: data.endDate,
+      startDate: isoStartDate,
+      endDate: isoEndDate,
     });
   };
 
