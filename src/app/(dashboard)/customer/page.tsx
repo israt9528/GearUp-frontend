@@ -22,8 +22,16 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { RentalStatus } from "@/types/rental.types";
+import { useState } from "react";
+import { ReviewModal } from "@/components/reviews/reviewModal";
 
 export default function CustomerDashboardPage() {
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [selectedGearForReview, setSelectedGearForReview] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
+
   const { data, isPending, isError, error } = useQuery({
     queryKey: ["my-rentals"],
     queryFn: rentalApi.getMyRentals,
@@ -71,6 +79,11 @@ export default function CustomerDashboardPage() {
       default:
         return <Badge variant="outline">{status}</Badge>;
     }
+  };
+
+  const openReviewModal = (gearId: string, gearName: string) => {
+    setSelectedGearForReview({ id: gearId, name: gearName });
+    setIsReviewModalOpen(true);
   };
 
   if (isPending) {
@@ -155,7 +168,16 @@ export default function CustomerDashboardPage() {
                           </Link>
                         )}
                         {rental.status === "RETURNED" && (
-                          <Button size="sm" variant="outline">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() =>
+                              openReviewModal(
+                                rental.gearId,
+                                rental.gear?.name || "Unknown Gear",
+                              )
+                            }
+                          >
                             Leave Review
                           </Button>
                         )}
@@ -173,6 +195,14 @@ export default function CustomerDashboardPage() {
           )}
         </CardContent>
       </Card>
+      {selectedGearForReview && (
+        <ReviewModal
+          isOpen={isReviewModalOpen}
+          onClose={() => setIsReviewModalOpen(false)}
+          gearId={selectedGearForReview.id}
+          gearName={selectedGearForReview.name}
+        />
+      )}
     </div>
   );
 }
