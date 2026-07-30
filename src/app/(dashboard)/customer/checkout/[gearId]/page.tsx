@@ -51,14 +51,14 @@ export default function CheckoutPage({
   const mutation = useMutation({
     mutationFn: rentalApi.createRental,
     onSuccess: (response) => {
-      toast.success("Rental order placed successfully!");
-      // Assuming backend returns the created order ID in response.data.id
+      toast.success("Order placed! Waiting for provider confirmation.");
       const orderId = response.data?.id;
       if (orderId) {
-        // We will build this payment page in the next phase!
-        router.push(`/customer/payment/${orderId}`);
-      } else {
         router.push("/customer");
+
+        //     router.push(`/customer/payment/${orderId}`);
+        //   } else {
+        //     router.push("/customer");
       }
     },
     onError: (error: Error) => {
