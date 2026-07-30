@@ -28,7 +28,7 @@ export const reviewApi = {
   },
 
   getGearReviews: async (gearId: string): Promise<ApiResponse<Review[]>> => {
-    const response = await api.get(`/reviews/${gearId}`);
+    const response = await api.get(`/reviews/gear/${gearId}`);
     return response.data;
   },
 };

@@ -2,6 +2,12 @@ import { api } from "@/lib/axios";
 import { ApiResponse } from "@/types/api.types";
 import { Rental, RentalStatus } from "@/types/rental.types";
 
+export interface CreateRentalDto {
+  gearId: string;
+  startDate: string;
+  endDate: string;
+}
+
 export const rentalApi = {
   createRental: async (data: {
     gearId: string;
