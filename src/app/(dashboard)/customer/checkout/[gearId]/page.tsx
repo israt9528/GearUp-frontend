@@ -1,7 +1,7 @@
 "use client";
 
 import { use } from "react";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm, useWatch } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -24,6 +24,7 @@ export default function CheckoutPage({
 }) {
   const { gearId } = use(params);
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const { register, handleSubmit, control } = useForm<CheckoutForm>();
   const startDate = useWatch({ control, name: "startDate" });
@@ -52,13 +53,12 @@ export default function CheckoutPage({
     mutationFn: rentalApi.createRental,
     onSuccess: (response) => {
       toast.success("Order placed! Waiting for provider confirmation.");
+
+      queryClient.invalidateQueries({ queryKey: ["my-rentals"] });
+
       const orderId = response.data?.id;
       if (orderId) {
         router.push("/customer");
-
-        //     router.push(`/customer/payment/${orderId}`);
-        //   } else {
-        //     router.push("/customer");
       }
     },
     onError: (error: Error) => {
