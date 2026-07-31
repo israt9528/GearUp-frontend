@@ -28,7 +28,7 @@ export const gearApi = {
     id: string;
     data: Partial<GearItem>;
   }): Promise<ApiResponse<GearItem>> => {
-    const response = await api.patch(`/gear/${id}`, data);
+    const response = await api.put(`/gear/${id}`, data);
     return response.data;
   },
   deleteGear: async (id: string): Promise<ApiResponse<GearItem>> => {

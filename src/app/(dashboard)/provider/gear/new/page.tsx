@@ -1,14 +1,14 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { gearApi } from "@/api/gear.api";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { isAxiosError } from "axios";
+import { categoryApi } from "@/api/category.api";
 
 interface CreateGearForm {
   name: string;
@@ -25,26 +25,27 @@ export default function CreateGearPage() {
 
   const mutation = useMutation({
     mutationFn: (data: CreateGearForm) => {
-      // 1. Destructure imageUrl OUT of the data object
-      const { imageUrl, ...restOfData } = data;
-
       return gearApi.createGear({
-        ...restOfData, // Send everything else
+        ...data,
         price: Number(data.price),
         stock: Number(data.stock),
-        // If your database actually uses a different name like 'image',
-        // you would add it here like: image: imageUrl
       });
     },
     onSuccess: () => {
       toast.success("Gear listed successfully!");
-      router.push("/provider");
+      router.push("/provider/gear");
     },
     onError: (error: Error) => {
       toast.error(error.message || "Failed to create gear");
     },
   });
 
+  const { data: categoriesData, isPending: isCategoriesPending } = useQuery({
+    queryKey: ["categories"],
+    queryFn: categoryApi.getAllCategories,
+  });
+
+  const categories = categoriesData?.data || [];
   const onSubmit = (data: CreateGearForm) => {
     mutation.mutate(data);
   };
@@ -85,7 +86,7 @@ export default function CreateGearPage() {
                   Price per Day ($)
                 </label>
                 <Input
-                  type="number"
+                  type="float"
                   min="1"
                   placeholder="50"
                   {...register("price", { required: true })}
@@ -103,14 +104,30 @@ export default function CreateGearPage() {
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium mb-1">
-                  Category ID
-                </label>
-                <Input
-                  placeholder="Enter category ID"
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Category</label>
+                <select
                   {...register("categoryId", { required: true })}
-                />
+                  defaultValue=""
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  <option value="" disabled>
+                    Select a category
+                  </option>
+                  {isCategoriesPending ? (
+                    <option disabled>Loading categories...</option>
+                  ) : categories.length === 0 ? (
+                    <option disabled>
+                      No categories available (Contact Admin)
+                    </option>
+                  ) : (
+                    categories.map((cat) => (
+                      <option key={cat.id} value={cat.id}>
+                        {cat.name}
+                      </option>
+                    ))
+                  )}
+                </select>
               </div>
             </div>
 
