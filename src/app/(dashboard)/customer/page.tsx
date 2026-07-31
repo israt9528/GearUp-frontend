@@ -1,9 +1,13 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+
 import Link from "next/link";
+
 import { Loader2 } from "lucide-react";
+
 import { rentalApi } from "@/api/rental.api";
+
 import {
   Card,
   CardContent,
@@ -11,8 +15,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+
 import { Badge } from "@/components/ui/badge";
+
 import { Button } from "@/components/ui/button";
+
 import {
   Table,
   TableBody,
@@ -21,23 +28,31 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+
 import { RentalStatus } from "@/types/rental.types";
+
 import { useState } from "react";
+
 import { ReviewModal } from "@/components/reviews/reviewModal";
+import { useRouter } from "next/navigation";
 
 export default function CustomerDashboardPage() {
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const router = useRouter();
   const [selectedGearForReview, setSelectedGearForReview] = useState<{
     id: string;
+
     name: string;
   } | null>(null);
 
   const { data, isPending, isError, error } = useQuery({
     queryKey: ["my-rentals"],
+
     queryFn: rentalApi.getMyRentals,
   });
 
   // Updated to match your exact UI Badge color specifications
+
   const getStatusBadge = (status: RentalStatus) => {
     switch (status) {
       case "PLACED":
@@ -46,36 +61,42 @@ export default function CustomerDashboardPage() {
             Placed
           </Badge>
         );
+
       case "CONFIRMED":
         return (
           <Badge className="bg-blue-500 hover:bg-blue-600 text-white">
             Confirmed
           </Badge>
         );
+
       case "PAID":
         return (
           <Badge className="bg-purple-500 hover:bg-purple-600 text-white">
             Paid
           </Badge>
         );
+
       case "PICKED_UP":
         return (
           <Badge className="bg-green-500 hover:bg-green-600 text-white">
             Picked Up
           </Badge>
         );
+
       case "RETURNED":
         return (
           <Badge className="bg-gray-500 hover:bg-gray-600 text-white">
             Returned
           </Badge>
         );
+
       case "CANCELLED":
         return (
           <Badge className="bg-red-500 hover:bg-red-600 text-white">
             Cancelled
           </Badge>
         );
+
       default:
         return <Badge variant="outline">{status}</Badge>;
     }
@@ -83,6 +104,7 @@ export default function CustomerDashboardPage() {
 
   const openReviewModal = (gearId: string, gearName: string) => {
     setSelectedGearForReview({ id: gearId, name: gearName });
+
     setIsReviewModalOpen(true);
   };
 
@@ -110,6 +132,7 @@ export default function CustomerDashboardPage() {
         <h1 className="text-3xl font-bold tracking-tight">
           Customer Dashboard
         </h1>
+
         <p className="text-gray-500 mt-2">
           Manage your gear rentals and view your history.
         </p>
@@ -118,10 +141,12 @@ export default function CustomerDashboardPage() {
       <Card>
         <CardHeader>
           <CardTitle>My Rentals</CardTitle>
+
           <CardDescription>
             A list of all your recent rental orders.
           </CardDescription>
         </CardHeader>
+
         <CardContent>
           {rentals.length === 0 ? (
             <div className="text-center py-8 text-gray-500">
@@ -133,15 +158,28 @@ export default function CustomerDashboardPage() {
                 <TableHeader>
                   <TableRow>
                     <TableHead>Gear</TableHead>
+
                     <TableHead>Dates</TableHead>
+
                     <TableHead>Total</TableHead>
+
                     <TableHead>Status</TableHead>
+
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
+
                 <TableBody>
                   {rentals.map((rental) => (
-                    <TableRow key={rental.id}>
+                    <TableRow
+                      key={rental.id}
+                      onClick={() => {
+                        if (rental.id) {
+                          router.push(`/customer/rentals/${rental.id}`);
+                        }
+                      }}
+                      className="cursor-pointer hover:bg-muted/50 transition-colors"
+                    >
                       <TableCell className="font-medium">
                         {rental.gear?.name || "Unknown Gear"}
                       </TableCell>
@@ -155,8 +193,11 @@ export default function CustomerDashboardPage() {
                       </TableCell>
                       <TableCell>${rental.totalAmount}</TableCell>
                       <TableCell>{getStatusBadge(rental.status)}</TableCell>
-                      <TableCell className="text-right">
-                        {/* Dynamic Action Buttons based on Status */}
+                      <TableCell
+                        className="text-right"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        {/* e.stopPropagation() ensures clicking action buttons like 'Pay Now' doesn't trigger row navigation */}
                         {rental.status === "CONFIRMED" && (
                           <Link href={`/customer/payment/${rental.id}`}>
                             <Button
@@ -195,6 +236,7 @@ export default function CustomerDashboardPage() {
           )}
         </CardContent>
       </Card>
+
       {selectedGearForReview && (
         <ReviewModal
           isOpen={isReviewModalOpen}

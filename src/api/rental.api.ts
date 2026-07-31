@@ -18,7 +18,6 @@ export const rentalApi = {
     return response.data;
   },
 
-  // Gets all rentals (we will filter this on the frontend)
   getMyRentals: async (): Promise<ApiResponse<Rental[]>> => {
     const response = await api.get("/rentals");
     return response.data;
