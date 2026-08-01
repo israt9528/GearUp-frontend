@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
 import { LayoutDashboard, LogOut, Compass } from "lucide-react";
+import { Logo } from "../common/logo";
 
 export function Navbar() {
   const router = useRouter();
@@ -63,12 +64,7 @@ export function Navbar() {
     <nav className="sticky top-0 z-50 w-full border-b bg-white/80 backdrop-blur-md">
       <div className="container mx-auto w-full max-w-7xl px-5 h-16 flex items-center justify-between">
         {/* Brand Logo */}
-        <Link
-          href="/"
-          className="flex items-center gap-2 text-xl text-sky-700 font-bold font-serif tracking-tight text-primary"
-        >
-          <span>GearUp</span>
-        </Link>
+        <Logo />
 
         {/* Navigation Links */}
         <div className="hidden md:flex items-center gap-6">
