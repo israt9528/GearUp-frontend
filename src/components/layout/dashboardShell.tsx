@@ -115,7 +115,7 @@ function Sidebar({
       </nav>
 
       <div className="p-5">
-        <div className="rounded-2xl bg-slate-700 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 p-4">
+        <div className="rounded-2xl bg-slate-800 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 p-4">
           {user ? (
             <h3 className="font-semibold text-white">{user.role} Portal</h3>
           ) : (
@@ -306,10 +306,10 @@ export function DashboardShell({
       <Sidebar pathname={pathname} navItems={navItems} />
       <div className="lg:ml-72 flex min-h-screen flex-col">
         <DashboardHeader portalName={portalName} navItems={navItems} />
-        <main className="flex-1 p-4 md:p-6 lg:p-8">
+        <main className="flex-1 p-4 md:p-6 lg:p-7">
           <div className="mx-auto max-w-7xl">
-            <div className="rounded-3xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
-              <div className="p-5 md:p-8">{children}</div>
+            <div className=" dark:border-slate-800 dark:bg-slate-900">
+              <div className="p-5">{children}</div>
             </div>
           </div>
         </main>

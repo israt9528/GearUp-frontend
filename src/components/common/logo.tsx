@@ -24,16 +24,19 @@ export function Logo({
       )}
     >
       {/* Icon Container with subtle background accent */}
-      <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm">
+      <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-900 text-primary-foreground shadow-sm">
         <Package className={cn("h-5 w-5", iconClassName)} />
       </div>
 
       {/* Brand Text */}
       {showText && (
         <span
-          className={cn("text-lg font-bold text-foreground", textClassName)}
+          className={cn(
+            "text-2xl font-bold text-blue-950 font-serif",
+            textClassName,
+          )}
         >
-          Gear<span className="text-primary">Up</span>
+          Gear<span className="text-blue-800">Up</span>
         </span>
       )}
     </Link>
