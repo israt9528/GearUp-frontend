@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
-import { Loader2, Plus } from "lucide-react";
+import { Loader2, Plus, Tags, FolderTree, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 
 import { categoryApi, CreateCategoryDto } from "@/api/category.api";
@@ -69,96 +69,153 @@ export default function AdminCategoriesPage() {
   const categories = categoriesData?.data || [];
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-5xl space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">
-          Category Management
-        </h1>
-        <p className="text-gray-500 mt-2">
-          Create and manage gear categories for providers.
-        </p>
+    <div className="space-y-8 max-w-7xl mx-auto">
+      {/* Top Header Section */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-blue-950 flex items-center gap-2">
+            <Tags className="h-6 w-6 text-blue-950" /> Category Management
+          </h1>
+          <p className="text-sm text-muted-foreground mt-0.5">
+            Create, monitor, and organize equipment categories across the rental
+            platform.
+          </p>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {/* Create Category Form */}
-        <div className="md:col-span-1">
-          <Card>
-            <CardHeader>
-              <CardTitle>New Category</CardTitle>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Create Category Form Card */}
+        <div className="lg:col-span-1">
+          <Card className="border-border shadow-sm sticky top-6">
+            <CardHeader className="bg-muted/30 border-b border-border pb-4">
+              <CardTitle className="text-lg flex items-center gap-2 text-blue-950">
+                <Sparkles className="h-4 w-4 text-blue-950" /> New Category
+              </CardTitle>
               <CardDescription>
-                Add a new category to the platform.
+                Add a new classification group for provider equipment.
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="pt-6">
               <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Name</label>
+                <div className="space-y-1.5">
+                  <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    Category Name
+                  </label>
                   <Input
-                    placeholder="e.g. Cameras"
+                    placeholder="e.g. Cameras & Optics"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     required
+                    className="h-11 rounded-xl bg-background/50 border-border"
                   />
                 </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">
-                    Description (Optional)
+                <div className="space-y-1.5">
+                  <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    Description{" "}
+                    <span className="text-muted-foreground/60 font-normal">
+                      (Optional)
+                    </span>
                   </label>
                   <Input
-                    placeholder="e.g. DSLR and Mirrorless"
+                    placeholder="e.g. DSLR, Mirrorless, and cinema lenses"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
+                    className="h-11 rounded-xl bg-background/50 border-border"
                   />
                 </div>
                 <Button
                   type="submit"
-                  className="w-full"
+                  className="w-full h-11 rounded-xl bg-linear-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold shadow-md transition-all gap-2 mt-2"
                   disabled={mutation.isPending}
                 >
                   {mutation.isPending ? (
-                    <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" /> Creating...
+                    </>
                   ) : (
-                    <Plus className="h-4 w-4 mr-2" />
+                    <>
+                      <Plus className="h-4 w-4" /> Create Category
+                    </>
                   )}
-                  Create Category
                 </Button>
               </form>
             </CardContent>
           </Card>
         </div>
 
-        {/* Categories Table */}
-        <div className="md:col-span-2">
-          <Card>
-            <CardHeader>
-              <CardTitle>Existing Categories</CardTitle>
+        {/* Categories Table Section */}
+        <div className="lg:col-span-2">
+          <Card className="border-border shadow-sm overflow-hidden">
+            <CardHeader className="bg-muted/30 border-b border-border px-6 py-5">
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="text-lg text-blue-950">
+                    Existing Categories
+                  </CardTitle>
+                  <CardDescription className="mt-0.5">
+                    Active classification items currently available on the
+                    platform.
+                  </CardDescription>
+                </div>
+                <div className="hidden sm:flex items-center gap-1.5 text-xs text-muted-foreground bg-background px-3 py-1.5 rounded-lg border border-border font-medium">
+                  <FolderTree className="h-4 w-4 text-primary" />
+                  <span>{categories.length} Total Categories</span>
+                </div>
+              </div>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-0">
               {isPending ? (
-                <div className="flex justify-center py-8">
-                  <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                <div className="flex justify-center items-center py-20">
+                  <Loader2 className="h-8 w-8 animate-spin text-primary" />
                 </div>
               ) : categories.length === 0 ? (
-                <div className="text-center py-8 text-gray-500 border rounded-md bg-gray-50">
-                  No categories found. Create one to get started.
+                <div className="text-center py-16 px-4 space-y-3">
+                  <div className="h-12 w-12 rounded-full bg-primary/10 text-primary flex items-center justify-center mx-auto">
+                    <FolderTree className="h-6 w-6" />
+                  </div>
+                  <h3 className="font-semibold text-base">
+                    No categories found
+                  </h3>
+                  <p className="text-sm text-muted-foreground max-w-sm mx-auto">
+                    No categories have been created yet. Use the form on the
+                    left to add your first platform category.
+                  </p>
                 </div>
               ) : (
-                <div className="border rounded-md">
+                <div className="overflow-x-auto">
                   <Table>
-                    <TableHeader>
+                    <TableHeader className="bg-indigo-100/50">
                       <TableRow>
-                        <TableHead>Name</TableHead>
-                        <TableHead>Description</TableHead>
+                        <TableHead className="py-4 px-6 font-semibold text-blue-950">
+                          Category Name
+                        </TableHead>
+                        <TableHead className="py-4 px-6 font-semibold text-blue-950">
+                          Description
+                        </TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {categories.map((category) => (
-                        <TableRow key={category.id}>
-                          <TableCell className="font-medium">
-                            {category.name}
+                        <TableRow
+                          key={category.id}
+                          className="hover:bg-blue-100/50 transition-colors border-b border-border last:border-0"
+                        >
+                          <TableCell className="py-4 px-6 font-medium text-foreground">
+                            <div className="flex items-center gap-3">
+                              <div className="h-8 w-8 rounded-lg bg-blue-500/10 text-blue-600 flex items-center justify-center shrink-0">
+                                <Tags className="h-4 w-4" />
+                              </div>
+                              <span className="font-semibold">
+                                {category.name}
+                              </span>
+                            </div>
                           </TableCell>
-                          <TableCell className="text-gray-500">
-                            {category.description || "-"}
+                          <TableCell className="py-4 px-6 text-muted-foreground text-sm">
+                            {category.description || (
+                              <span className="italic text-muted-foreground/60">
+                                No description provided
+                              </span>
+                            )}
                           </TableCell>
                         </TableRow>
                       ))}

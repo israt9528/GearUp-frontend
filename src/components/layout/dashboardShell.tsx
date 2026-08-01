@@ -15,6 +15,8 @@ import {
   PackageCheck,
   LucideIcon,
   Package,
+  Tags,
+  ShoppingCart,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -42,7 +44,9 @@ export interface NavItemConfig {
     | "CreditCard"
     | "Users"
     | "PackageCheck"
-    | "Package";
+    | "Package"
+    | "Tags"
+    | "ShoppingCart";
 }
 
 interface DashboardShellProps {
@@ -57,6 +61,8 @@ const iconMap: Record<string, LucideIcon> = {
   Users,
   PackageCheck,
   Package,
+  Tags,
+  ShoppingCart,
 };
 
 const getInitials = (name?: string): string => {

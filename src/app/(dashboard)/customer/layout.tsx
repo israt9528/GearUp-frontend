@@ -1,3 +1,4 @@
+import { ProtectedRoute } from "@/components/auth/protectedRoute";
 import {
   DashboardShell,
   NavItemConfig,
@@ -19,8 +20,10 @@ export default function CustomerLayout({
   children: React.ReactNode;
 }) {
   return (
-    <DashboardShell navItems={customerNav} portalName="Customer Dashboard">
-      {children}
-    </DashboardShell>
+    <ProtectedRoute allowedRoles={["CUSTOMER"]}>
+      <DashboardShell navItems={customerNav} portalName="Customer Dashboard">
+        {children}
+      </DashboardShell>
+    </ProtectedRoute>
   );
 }
