@@ -2,7 +2,18 @@
 
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Loader2, Save } from "lucide-react";
+import {
+  Loader2,
+  Save,
+  Sparkles,
+  Tag,
+  DollarSign,
+  Layers,
+  Image as ImageIcon,
+  FileText,
+  CheckCircle2,
+  Package,
+} from "lucide-react";
 import { toast } from "sonner";
 import { isAxiosError } from "axios";
 
@@ -23,7 +34,7 @@ import { Input } from "@/components/ui/input";
 interface EditGearModalProps {
   isOpen: boolean;
   onClose: () => void;
-  gearItem: GearItem; // STRICTLY TYPED
+  gearItem: GearItem;
 }
 
 export function EditGearModal({
@@ -33,7 +44,6 @@ export function EditGearModal({
 }: EditGearModalProps) {
   const queryClient = useQueryClient();
 
-  // Initialize state directly from the prop (No useEffect needed because of the 'key' trick we will use in the parent)
   const [formData, setFormData] = useState({
     name: gearItem.name || "",
     description: gearItem.description || "",
@@ -50,6 +60,7 @@ export function EditGearModal({
   });
 
   const categories = categoriesData?.data || [];
+
   const updateMutation = useMutation({
     mutationFn: (data: Partial<GearItem>) =>
       gearApi.updateGear({ id: gearItem.id, data }),
@@ -93,11 +104,20 @@ export function EditGearModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-125 max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>Edit Gear</DialogTitle>
-          <DialogDescription>
-            Make changes to your listing and save when you are done.
+      <DialogContent className="sm:max-w-xl max-h-[90vh] overflow-y-auto border-border/80 shadow-2xl rounded-3xl p-6 sm:p-8">
+        <DialogHeader className="space-y-1.5 pb-2 border-b border-border">
+          <div className="flex items-center gap-2 text-primary">
+            <Sparkles className="h-5 w-5" />
+            <span className="text-xs font-mono font-semibold uppercase tracking-wider">
+              Equipment Management
+            </span>
+          </div>
+          <DialogTitle className="text-2xl font-bold tracking-tight">
+            Edit Gear Listing
+          </DialogTitle>
+          <DialogDescription className="text-sm text-muted-foreground">
+            Update specifications, pricing, and availability status for this
+            equipment.
           </DialogDescription>
         </DialogHeader>
 
@@ -106,30 +126,38 @@ export function EditGearModal({
           onSubmit={handleSubmit}
           className="space-y-5 py-4"
         >
+          {/* Gear Name */}
           <div className="space-y-2">
-            <label className="text-sm font-medium">Gear Name</label>
+            <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+              <Package className="h-3.5 w-3.5 text-primary" /> Gear Name
+            </label>
             <Input
               name="name"
+              placeholder="e.g. Professional Cinematic Camera"
               value={formData.name}
               onChange={handleChange}
               required
+              className="h-11 rounded-xl bg-background/50 border-border"
             />
           </div>
 
+          {/* Category Selection */}
           <div className="space-y-2">
-            <label className="text-sm font-medium">Category</label>
+            <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+              <Tag className="h-3.5 w-3.5 text-primary" /> Category
+            </label>
             <select
               name="categoryId"
               value={formData.categoryId}
               onChange={handleChange}
               required
-              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              className="flex h-11 w-full rounded-xl border border-input bg-background/50 px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 transition-all shadow-xs"
             >
               <option value="" disabled>
-                Select a category
+                Select equipment category
               </option>
               {isCategoriesPending ? (
-                <option disabled>Loading...</option>
+                <option disabled>Loading categories...</option>
               ) : (
                 categories.map((cat) => (
                   <option key={cat.id} value={cat.id}>
@@ -140,9 +168,13 @@ export function EditGearModal({
             </select>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          {/* Price & Stock Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <label className="text-sm font-medium">Price per Day ($)</label>
+              <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+                <DollarSign className="h-3.5 w-3.5 text-primary" /> Price per
+                Day ($)
+              </label>
               <Input
                 type="number"
                 name="price"
@@ -151,10 +183,13 @@ export function EditGearModal({
                 value={formData.price}
                 onChange={handleChange}
                 required
+                className="h-11 rounded-xl bg-background/50 border-border"
               />
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium">Stock Quantity</label>
+              <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+                <Layers className="h-3.5 w-3.5 text-primary" /> Stock Quantity
+              </label>
               <Input
                 type="number"
                 name="stock"
@@ -162,56 +197,71 @@ export function EditGearModal({
                 value={formData.stock}
                 onChange={handleChange}
                 required
+                className="h-11 rounded-xl bg-background/50 border-border"
               />
             </div>
           </div>
 
+          {/* Image URL */}
           <div className="space-y-2">
-            <label className="text-sm font-medium">Image URL</label>
+            <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+              <ImageIcon className="h-3.5 w-3.5 text-primary" /> Image URL{" "}
+              <span className="font-normal lowercase text-muted-foreground/60">
+                (optional)
+              </span>
+            </label>
             <Input
               name="imageUrl"
-              placeholder="https://..."
+              placeholder="https://example.com/gear.jpg"
               value={formData.imageUrl}
               onChange={handleChange}
+              className="h-11 rounded-xl bg-background/50 border-border"
             />
           </div>
 
+          {/* Description */}
           <div className="space-y-2">
-            <label className="text-sm font-medium">Description</label>
+            <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+              <FileText className="h-3.5 w-3.5 text-primary" /> Description
+            </label>
             <textarea
               name="description"
               rows={3}
+              placeholder="Describe the condition, specifications, and features of the gear..."
               value={formData.description}
               onChange={handleChange}
               required
-              className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              className="flex w-full rounded-xl border border-input bg-background/50 px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 transition-all shadow-xs resize-none"
             />
           </div>
 
-          <div className="flex items-center space-x-2 bg-gray-50 p-3 rounded-lg border">
+          {/* Availability Checkbox Card */}
+          <div className="flex items-center space-x-3 bg-muted/40 p-4 rounded-2xl border border-border transition-colors hover:bg-muted/60">
             <input
               type="checkbox"
               id="isAvailable"
               name="isAvailable"
               checked={formData.isAvailable}
               onChange={handleChange}
-              className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+              className="h-4 w-4 rounded border-border text-primary focus:ring-primary accent-primary cursor-pointer"
             />
             <label
               htmlFor="isAvailable"
-              className="text-sm font-medium leading-none"
+              className="text-sm font-medium leading-none cursor-pointer flex items-center gap-2 text-foreground"
             >
-              Visible & Available for Rent
+              <CheckCircle2 className="h-4 w-4 text-green-600" />
+              <span>Visible & Available for immediate rent</span>
             </label>
           </div>
         </form>
 
-        <DialogFooter>
+        <DialogFooter className="pt-4 border-t border-border flex flex-col sm:flex-row gap-2">
           <Button
             type="button"
             variant="outline"
             onClick={onClose}
             disabled={updateMutation.isPending}
+            className="w-full sm:w-auto h-11 rounded-xl border-border hover:bg-muted/50 font-medium"
           >
             Cancel
           </Button>
@@ -219,11 +269,12 @@ export function EditGearModal({
             type="submit"
             form="edit-gear-form"
             disabled={updateMutation.isPending}
+            className="w-full sm:w-auto h-11 rounded-xl bg-linear-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold shadow-md transition-all gap-2"
           >
             {updateMutation.isPending ? (
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              <Loader2 className="h-4 w-4 animate-spin" />
             ) : (
-              <Save className="mr-2 h-4 w-4" />
+              <Save className="h-4 w-4" />
             )}
             Save Changes
           </Button>

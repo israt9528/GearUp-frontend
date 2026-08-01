@@ -1,34 +1,34 @@
 "use client";
 
 import Link from "next/link";
-import { ShieldAlert, ArrowLeft, Home, Lock } from "lucide-react";
+import { Ghost, ArrowLeft, Home, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
-export default function UnauthorizedPage() {
+export default function NotFoundPage() {
   return (
     <div className="min-h-screen bg-linear-to-br from-slate-50 via-blue-50/20 to-indigo-50/30 dark:from-slate-950 dark:to-slate-900 flex items-center justify-center p-4 sm:p-6">
       <Card className="w-full max-w-lg border-border/80 shadow-2xl bg-card/95 backdrop-blur-xl rounded-3xl overflow-hidden text-center p-8 sm:p-10">
         <CardContent className="p-0 space-y-6">
-          {/* Animated Icon Container */}
-          <div className="relative mx-auto w-20 h-20 rounded-2xl bg-red-500/10 text-red-600 dark:text-red-400 flex items-center justify-center shadow-inner">
-            <ShieldAlert className="h-10 w-10 animate-bounce" />
-            <div className="absolute -top-1 -right-1 bg-red-600 text-white rounded-full p-1.5 shadow-md">
-              <Lock className="h-3.5 w-3.5" />
+          {/* Animated 404 Ghost Icon Container */}
+          <div className="relative mx-auto w-24 h-24 rounded-3xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center shadow-inner">
+            <Ghost className="h-12 w-12 animate-pulse" />
+            <div className="absolute -bottom-2 -right-2 bg-indigo-600 text-white rounded-2xl px-2.5 py-1 text-xs font-mono font-bold shadow-md">
+              404
             </div>
           </div>
 
           {/* Heading & Description */}
           <div className="space-y-2">
-            <span className="text-xs font-mono font-semibold uppercase tracking-widest text-red-600 dark:text-red-400 bg-red-500/10 px-3 py-1 rounded-full">
-              Error 403 • Forbidden Access
+            <span className="text-xs font-mono font-semibold uppercase tracking-widest text-blue-600 dark:text-blue-400 bg-blue-500/10 px-3 py-1 rounded-full">
+              Page Not Found
             </span>
             <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground pt-2">
-              Access Denied
+              Oops! You&apos;re lost in space
             </h1>
             <p className="text-sm sm:text-base text-muted-foreground max-w-sm mx-auto leading-relaxed">
-              You do not possess the required security clearances or
-              administrative privileges to view this restricted page.
+              The page you are looking for might have been removed, had its name
+              changed, or is temporarily unavailable.
             </p>
           </div>
 
@@ -48,9 +48,19 @@ export default function UnauthorizedPage() {
             </Button>
           </div>
 
-          {/* Security Support Footer Note */}
-          <div className="pt-6 border-t border-border text-xs text-muted-foreground">
-            If you believe this is a mistake, please contact platform support.
+          {/* Helpful Navigation Footer */}
+          <div className="pt-6 border-t border-border flex items-center justify-center gap-2 text-xs text-muted-foreground">
+            <Search className="h-3.5 w-3.5 text-primary" />
+            <span>
+              Looking for gear? Check our{" "}
+              <Link
+                href="/gear"
+                className="text-primary font-semibold hover:underline"
+              >
+                catalog
+              </Link>
+              .
+            </span>
           </div>
         </CardContent>
       </Card>

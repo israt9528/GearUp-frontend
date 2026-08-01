@@ -17,6 +17,7 @@ import {
   Package,
   Tags,
   ShoppingCart,
+  PlusCircle,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -46,7 +47,8 @@ export interface NavItemConfig {
     | "PackageCheck"
     | "Package"
     | "Tags"
-    | "ShoppingCart";
+    | "ShoppingCart"
+    | "PlusCircle";
 }
 
 interface DashboardShellProps {
@@ -63,6 +65,7 @@ const iconMap: Record<string, LucideIcon> = {
   Package,
   Tags,
   ShoppingCart,
+  PlusCircle,
 };
 
 const getInitials = (name?: string): string => {
