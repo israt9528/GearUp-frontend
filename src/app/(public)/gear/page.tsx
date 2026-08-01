@@ -46,8 +46,7 @@ export default function BrowseGearPage() {
   const filters = {
     searchTerm: searchTerm.trim(),
     categoryId: categoryId || undefined,
-    isAvailable:
-      availability === "" ? undefined : availability === "available",
+    isAvailable: availability === "" ? undefined : availability === "available",
     minPrice: minPrice ? Number(minPrice) : undefined,
     maxPrice: maxPrice ? Number(maxPrice) : undefined,
     sortBy,
@@ -80,9 +79,7 @@ export default function BrowseGearPage() {
     { length: Math.min(totalPages, 5) },
     (_, index) => {
       const startPage =
-        totalPages <= 5
-          ? 1
-          : Math.min(Math.max(page - 2, 1), totalPages - 4);
+        totalPages <= 5 ? 1 : Math.min(Math.max(page - 2, 1), totalPages - 4);
 
       return startPage + index;
     },
@@ -106,7 +103,7 @@ export default function BrowseGearPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-sky-50">
+    <div className="min-h-screen bg-linear-to-br from-emerald-50 via-white to-sky-50">
       <div className="mx-auto w-full max-w-7xl px-4 py-5 sm:px-6 lg:px-8">
         <header className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
