@@ -5,7 +5,18 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useAuthStore } from "@/store/useAuthStore";
 import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
+import { LayoutDashboard, LogOut, Compass } from "lucide-react";
 
 export function Navbar() {
   const router = useRouter();
@@ -37,40 +48,106 @@ export function Navbar() {
     }
   };
 
+  // Get user initials for avatar fallback
+  const getInitials = (name?: string) => {
+    if (!name) return "U";
+    return name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase()
+      .substring(0, 2);
+  };
+
   return (
-    <nav className="border-b bg-white">
-      <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-        <Link href="/" className="text-xl font-bold tracking-tight">
-          GearUp
+    <nav className="sticky top-0 z-50 w-full border-b bg-white/80 backdrop-blur-md">
+      <div className="container mx-auto w-full max-w-7xl px-5 h-16 flex items-center justify-between">
+        {/* Brand Logo */}
+        <Link
+          href="/"
+          className="flex items-center gap-2 text-xl text-sky-700 font-bold font-serif tracking-tight text-primary"
+        >
+          <span>GearUp</span>
         </Link>
 
-        <div className="flex items-center gap-4">
-          <Link href="/gear" className="text-sm font-medium hover:underline">
+        {/* Navigation Links */}
+        <div className="hidden md:flex items-center gap-6">
+          <Link
+            href="/gear"
+            className="flex items-center gap-1.5 text-sm font-medium text-gray-600 hover:text-primary transition-colors"
+          >
+            <Compass className="h-4 w-4" />
             Browse Gear
           </Link>
+        </div>
 
-          {/* Only render auth buttons after hydration to prevent UI mismatch */}
+        {/* Right Side Actions / User Profile */}
+        <div className="flex items-center gap-4">
+          <Link
+            href="/gear"
+            className="md:hidden text-sm font-medium text-gray-600 hover:text-primary"
+          >
+            Browse
+          </Link>
+
           {isMounted && (
             <>
-              {isAuthenticated ? (
-                <div className="flex items-center gap-4">
-                  <Link
-                    href={getDashboardLink()}
-                    className="text-sm font-medium hover:underline"
-                  >
-                    Dashboard
-                  </Link>
-                  <Button variant="outline" onClick={handleLogout}>
-                    Logout
-                  </Button>
-                </div>
+              {isAuthenticated && user ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button className="flex items-center gap-2 focus:outline-none rounded-full ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+                      <Avatar className="h-9 w-9 border border-gray-200 transition-transform hover:scale-105">
+                        <AvatarImage src={""} alt={user.name || "User"} />
+                        <AvatarFallback className="bg-primary/10 text-primary font-semibold text-xs">
+                          {getInitials(user.name)}
+                        </AvatarFallback>
+                      </Avatar>
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-56" align="end" forceMount>
+                    <DropdownMenuLabel className="font-normal">
+                      <div className="flex flex-col space-y-1">
+                        <p className="text-sm font-medium leading-none text-gray-900">
+                          {user.name}
+                        </p>
+                        <p className="text-xs leading-none text-gray-500 truncate">
+                          {user.email}
+                        </p>
+                      </div>
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuGroup>
+                      <DropdownMenuItem asChild>
+                        <Link
+                          href={getDashboardLink()}
+                          className="cursor-pointer flex w-full items-center"
+                        >
+                          <LayoutDashboard className="mr-2 h-4 w-4" />
+                          <span>Dashboard</span>
+                        </Link>
+                      </DropdownMenuItem>
+                    </DropdownMenuGroup>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                      onClick={handleLogout}
+                      className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50"
+                    >
+                      <LogOut className="mr-2 h-4 w-4" />
+                      <span>Log out</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               ) : (
                 <div className="flex items-center gap-2">
                   <Link href="/login">
-                    <Button variant="ghost">Login</Button>
+                    <Button variant="ghost" size="sm" className="font-medium">
+                      Login
+                    </Button>
                   </Link>
                   <Link href="/register">
-                    <Button>Sign Up</Button>
+                    <Button size="sm" className="font-medium">
+                      Sign Up
+                    </Button>
                   </Link>
                 </div>
               )}

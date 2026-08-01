@@ -15,4 +15,8 @@ export const authApi = {
     const response = await api.post("/auth/register", data);
     return response.data;
   },
+  getMe: async (): Promise<ApiResponse<User>> => {
+    const response = await api.get("/auth/me");
+    return response.data;
+  },
 };

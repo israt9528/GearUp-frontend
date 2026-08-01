@@ -1,10 +1,12 @@
 import { api } from "@/lib/axios";
 import { ApiResponse } from "@/types/api.types";
-import { GearItem } from "@/types/gear.types";
+import { GearFilters, GearItem } from "@/types/gear.types";
 
 export const gearApi = {
-  getAllGear: async (): Promise<ApiResponse<GearItem[]>> => {
-    const response = await api.get("/gear");
+  getAllGear: async (
+    filters?: GearFilters,
+  ): Promise<ApiResponse<GearItem[]>> => {
+    const response = await api.get("/gear", { params: filters });
     return response.data;
   },
   getGearById: async (id: string): Promise<ApiResponse<GearItem>> => {

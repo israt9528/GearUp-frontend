@@ -16,3 +16,14 @@ export interface GearItem {
   providerId: string;
   isAvailable: boolean;
 }
+
+export interface GearFilters {
+  searchTerm?: string;
+  categoryId?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  sortBy?: string;
+  sortOrder?: "asc" | "desc";
+  page?: number;
+  limit?: number;
+}

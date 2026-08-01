@@ -40,7 +40,7 @@ export default function RootLayout({
         inter.variable,
       )}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col ">
         <QueryProvider>
           <Navbar></Navbar>
           <main className="min-h-screen">{children}</main>
