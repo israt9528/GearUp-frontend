@@ -81,7 +81,7 @@ export function GearCard({ gear }: GearCardProps) {
 
       <CardFooter className="mt-auto border-t border-sky-100 bg-sky-50/60 p-3">
         <Link href={`/gear/${gear.id}`} className="w-full">
-          <Button className="h-9 w-full bg-sky-700 text-white hover:bg-sky-800">
+          <Button className="h-9 w-full bg-blue-950/90 text-white hover:bg-blue-800">
             View details
             <ArrowRight className="h-4 w-4" />
           </Button>

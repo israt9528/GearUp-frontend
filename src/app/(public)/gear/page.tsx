@@ -103,14 +103,14 @@ export default function BrowseGearPage() {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-emerald-50 via-white to-sky-50">
+    <div className="min-h-screen">
       <div className="mx-auto w-full max-w-7xl px-4 py-5 sm:px-6 lg:px-8">
         <header className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <Badge className="mb-2 border-emerald-200 bg-emerald-100 text-emerald-800 hover:bg-emerald-100">
               Gear Marketplace
             </Badge>
-            <h1 className="text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl">
+            <h1 className="text-2xl font-bold tracking-tight text-blue-950 sm:text-3xl">
               Browse Outdoor Gear
             </h1>
             <p className="mt-1 text-sm text-slate-600">
