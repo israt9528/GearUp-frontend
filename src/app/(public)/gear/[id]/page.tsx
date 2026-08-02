@@ -162,6 +162,7 @@ export default function GearDetailsPage() {
                 src={gear.imageUrl}
                 alt={gear.name}
                 fill
+                unoptimized
                 className="object-cover"
                 priority
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 66vw, 50vw"

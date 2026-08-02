@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import Image from "next/image";
 import { Package, CheckCircle2, XCircle, ShieldCheck } from "lucide-react";
 import { adminApi } from "@/api/admin.api";
 import {
@@ -153,11 +154,24 @@ export default function AdminGearPage() {
                       key={gear.id}
                       className="hover:bg-blue-100/40 transition-colors border-b border-border last:border-0"
                     >
-                      {/* Item Name */}
+                      {/* Item Name & Image Thumbnail */}
                       <TableCell className="py-4 px-6 font-medium text-foreground">
                         <div className="flex items-center gap-3">
-                          <div className="h-9 w-9 rounded-lg bg-blue-500/10 text-blue-600 flex items-center justify-center shrink-0">
-                            <Package className="h-4 w-4" />
+                          <div className="relative h-10 w-10 rounded-xl bg-muted overflow-hidden shrink-0 border border-border">
+                            {gear.imageUrl ? (
+                              <Image
+                                unoptimized
+                                src={gear.imageUrl}
+                                alt={gear.name}
+                                fill
+                                sizes="(max-width: 768px) 40px, 40px"
+                                className="object-cover"
+                              />
+                            ) : (
+                              <div className="h-full w-full flex items-center justify-center text-blue-600 bg-blue-500/10">
+                                <Package className="h-4 w-4" />
+                              </div>
+                            )}
                           </div>
                           <div>
                             <span className="font-semibold block">
