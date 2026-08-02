@@ -5,7 +5,6 @@ import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
-  Loader2,
   PackageOpen,
   ArrowRight,
   ShieldCheck,
@@ -31,6 +30,7 @@ import {
 } from "@/components/ui/table";
 import { RentalStatus } from "@/types/rental.types";
 import { ReviewModal } from "@/components/reviews/reviewModal";
+import { CustomerRentalSkeleton } from "@/components/skeletons/customerRentalSkeleton";
 
 export default function CustomerRentalPage() {
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
@@ -94,11 +94,7 @@ export default function CustomerRentalPage() {
   };
 
   if (isPending) {
-    return (
-      <div className="flex justify-center items-center min-h-[60vh]">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
+    return <CustomerRentalSkeleton />;
   }
 
   if (isError) {

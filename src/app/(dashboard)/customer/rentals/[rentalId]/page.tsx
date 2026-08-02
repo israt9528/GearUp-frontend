@@ -4,15 +4,12 @@ import { use } from "react";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import {
-  Loader2,
   ArrowLeft,
   Calendar,
   ShieldCheck,
   DollarSign,
   CreditCard,
   Package,
-  Clock,
-  CheckCircle2,
 } from "lucide-react";
 import { rentalApi } from "@/api/rental.api";
 import {
@@ -24,6 +21,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { RentalDetailsSkeleton } from "@/components/skeletons/rentalDetailsSkeleton";
 
 interface RentalDetailsParams {
   rentalId: string;
@@ -126,11 +124,7 @@ export default function RentalDetailsPage({
   };
 
   if (isPending) {
-    return (
-      <div className="flex justify-center items-center min-h-[60vh]">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
+    return <RentalDetailsSkeleton />;
   }
 
   if (isError) {
@@ -153,7 +147,10 @@ export default function RentalDetailsPage({
     return (
       <div className="container mx-auto max-w-3xl p-12 text-center space-y-4">
         <h2 className="text-xl font-semibold">Rental order not found</h2>
-        <Button onClick={() => router.push("/customer")} variant="outline">
+        <Button
+          onClick={() => router.push("/customer/rentals")}
+          variant="outline"
+        >
           Back to My Rentals
         </Button>
       </div>

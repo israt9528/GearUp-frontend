@@ -2,7 +2,6 @@
 
 import { useQuery } from "@tanstack/react-query";
 import {
-  Loader2,
   DollarSign,
   Activity,
   Users,
@@ -22,6 +21,7 @@ import {
 import { useAuthStore } from "@/store/useAuthStore";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { AdminOverviewSkeleton } from "@/components/skeletons/adminOverviewSkeleton";
 
 export default function AdminOverviewPage() {
   const { user } = useAuthStore();
@@ -43,11 +43,7 @@ export default function AdminOverviewPage() {
   const isLoading = isUsersPending || isGearPending || isRentalsPending;
 
   if (isLoading) {
-    return (
-      <div className="flex justify-center items-center min-h-[60vh]">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
+    return <AdminOverviewSkeleton />;
   }
 
   const users = usersData?.data || [];

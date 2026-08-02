@@ -22,6 +22,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { AdminUsersSkeleton } from "@/components/skeletons/adminUsersSkeleton";
 
 const getInitials = (name?: string): string => {
   if (!name) return "U";
@@ -51,11 +52,7 @@ export default function AdminUsersPage() {
   });
 
   if (isPending) {
-    return (
-      <div className="flex justify-center items-center min-h-[60vh]">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
+    return <AdminUsersSkeleton />;
   }
 
   const users = usersData?.data || [];

@@ -24,6 +24,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { CategoriesTableSkeleton } from "@/components/skeletons/adminCategoriesSkeleton";
 
 export default function AdminCategoriesPage() {
   const [name, setName] = useState("");
@@ -165,9 +166,7 @@ export default function AdminCategoriesPage() {
             </CardHeader>
             <CardContent className="p-0">
               {isPending ? (
-                <div className="flex justify-center items-center py-20">
-                  <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                </div>
+                <CategoriesTableSkeleton />
               ) : categories.length === 0 ? (
                 <div className="text-center py-16 px-4 space-y-3">
                   <div className="h-12 w-12 rounded-full bg-primary/10 text-primary flex items-center justify-center mx-auto">

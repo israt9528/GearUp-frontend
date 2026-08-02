@@ -2,15 +2,7 @@
 
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  Loader2,
-  Edit,
-  Trash2,
-  Plus,
-  Package,
-  ShieldCheck,
-  Tag,
-} from "lucide-react";
+import { Edit, Trash2, Plus, Package, ShieldCheck, Tag } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 import Swal from "sweetalert2";
@@ -36,6 +28,7 @@ import {
 } from "@/components/ui/table";
 import { EditGearModal } from "@/components/features/gear/editGearModal";
 import { GearItem } from "@/types/gear.types";
+import { ProviderGearSkeleton } from "@/components/skeletons/providerGearSkeleton";
 
 export default function ProviderGearPage() {
   const { user } = useAuthStore();
@@ -60,11 +53,7 @@ export default function ProviderGearPage() {
   });
 
   if (isPending) {
-    return (
-      <div className="flex justify-center items-center min-h-[60vh]">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
+    return <ProviderGearSkeleton />;
   }
 
   const allGear = gearData?.data || [];

@@ -62,7 +62,7 @@ function PaymentSuccessContent() {
             </p>
             <Button
               className="w-full mt-4"
-              onClick={() => router.push("/customer")}
+              onClick={() => router.push("/customer/rentals")}
             >
               Go to My Rentals
             </Button>

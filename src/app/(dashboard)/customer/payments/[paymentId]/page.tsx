@@ -4,7 +4,6 @@ import { use } from "react";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import {
-  Loader2,
   ArrowLeft,
   CheckCircle2,
   Clock,
@@ -26,6 +25,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { PaymentDetailsSkeleton } from "@/components/skeletons/paymentDetailsSkeleton";
 
 interface PaymentDetailsParams {
   paymentId: string;
@@ -110,11 +110,7 @@ export default function PaymentDetailsPage({
   };
 
   if (isPending) {
-    return (
-      <div className="flex justify-center items-center min-h-[60vh]">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
+    return <PaymentDetailsSkeleton />;
   }
 
   if (isError) {

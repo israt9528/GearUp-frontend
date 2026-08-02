@@ -8,7 +8,6 @@ import {
   ShoppingCart,
   Plus,
   ArrowUpRight,
-  Loader2,
   ShieldCheck,
   TrendingUp,
   Clock,
@@ -28,6 +27,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { RentalStatus } from "@/types/rental.types";
 import { rentalApi } from "@/api/rental.api";
+import { ProviderOverviewSkeleton } from "@/components/skeletons/providerOverviewSkeleton";
 
 interface GearItem {
   id: string;
@@ -108,11 +108,7 @@ export default function ProviderOverviewPage() {
   };
 
   if (gearLoading || rentalsLoading) {
-    return (
-      <div className="flex justify-center items-center min-h-[60vh]">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
+    return <ProviderOverviewSkeleton />;
   }
 
   const allGear: GearItem[] = gearData?.data || [];
@@ -184,7 +180,7 @@ export default function ProviderOverviewPage() {
         </Card>
 
         {/* Pending Rentals Card */}
-        <Card className="border-border shadow-sm hover:shadow-md transition-all duration-200 group border-orange-500/40 bg-orange-500/5">
+        <Card className="border-border shadow-sm hover:shadow-md transition-all duration-200 group bg-orange-500/5">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-orange-600 dark:text-orange-400">
               Pending Rentals

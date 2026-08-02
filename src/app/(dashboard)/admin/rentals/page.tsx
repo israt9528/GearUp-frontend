@@ -2,7 +2,6 @@
 
 import { useQuery } from "@tanstack/react-query";
 import {
-  Loader2,
   ShoppingCart,
   ShieldCheck,
   DollarSign,
@@ -26,6 +25,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { RentalStatus } from "@/types/rental.types";
+import { AdminRentalsSkeleton } from "@/components/skeletons/adminRentalSkeleton";
 
 export default function AdminRentalsPage() {
   const { data: rentalsData, isPending } = useQuery({
@@ -77,11 +77,7 @@ export default function AdminRentalsPage() {
   };
 
   if (isPending) {
-    return (
-      <div className="flex justify-center items-center min-h-[60vh]">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
+    return <AdminRentalsSkeleton />;
   }
 
   const rentals = rentalsData?.data || [];

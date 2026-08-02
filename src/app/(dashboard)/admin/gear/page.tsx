@@ -1,13 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import {
-  Loader2,
-  Package,
-  CheckCircle2,
-  XCircle,
-  ShieldCheck,
-} from "lucide-react";
+import { Package, CheckCircle2, XCircle, ShieldCheck } from "lucide-react";
 import { adminApi } from "@/api/admin.api";
 import {
   Card,
@@ -25,6 +19,32 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { AdminGearSkeleton } from "@/components/skeletons/adminGearSkeleton";
+
+interface AdminGearItem {
+  id: string;
+  name: string;
+  description: string;
+  imageUrl?: string;
+  price: number;
+  stock: number;
+  isAvailable: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+  providerId: string;
+  categoryId: string;
+  provider?: {
+    id: string;
+    name: string;
+    email: string;
+  };
+  category?:
+    | {
+        id: string;
+        name: string;
+      }
+    | string;
+}
 
 export default function AdminGearPage() {
   const { data: gearData, isPending } = useQuery({
@@ -33,14 +53,10 @@ export default function AdminGearPage() {
   });
 
   if (isPending) {
-    return (
-      <div className="flex justify-center items-center min-h-[60vh]">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
+    return <AdminGearSkeleton />;
   }
 
-  const gearList = gearData?.data || [];
+  const gearList: AdminGearItem[] = gearData?.data || [];
   const availableCount = gearList.filter((g) => g.isAvailable).length;
   const unavailableCount = gearList.length - availableCount;
 
@@ -83,8 +99,8 @@ export default function AdminGearPage() {
                 Platform Equipment Catalog
               </CardTitle>
               <CardDescription className="mt-0.5">
-                Complete inventory list with pricing and live availability
-                states.
+                Complete inventory list with pricing, stock levels, and live
+                availability states.
               </CardDescription>
             </div>
             <div className="hidden sm:flex items-center gap-1.5 text-xs text-muted-foreground bg-background px-3 py-1.5 rounded-lg border border-border font-medium">
@@ -115,10 +131,16 @@ export default function AdminGearPage() {
                       Item Name
                     </TableHead>
                     <TableHead className="py-4 px-6 font-semibold text-blue-950">
-                      Provider ID
+                      Category
+                    </TableHead>
+                    <TableHead className="py-4 px-6 font-semibold text-blue-950">
+                      Provider
                     </TableHead>
                     <TableHead className="py-4 px-6 font-semibold text-blue-950">
                       Price / Day
+                    </TableHead>
+                    <TableHead className="py-4 px-6 font-semibold text-blue-950">
+                      Stock
                     </TableHead>
                     <TableHead className="py-4 px-6 font-semibold text-blue-950">
                       Availability Status
@@ -148,14 +170,34 @@ export default function AdminGearPage() {
                         </div>
                       </TableCell>
 
-                      {/* Provider ID */}
-                      <TableCell className="py-4 px-6 text-xs text-muted-foreground font-mono">
-                        {gear.providerId.slice(-8)}...
+                      {/* Category Name */}
+                      <TableCell className="py-4 px-6 text-sm text-foreground font-medium">
+                        {typeof gear.category === "object" &&
+                        gear.category !== null
+                          ? gear.category.name
+                          : typeof gear.category === "string"
+                            ? gear.category
+                            : "Uncategorized"}
+                      </TableCell>
+
+                      {/* Provider Info */}
+                      <TableCell className="py-4 px-6">
+                        <div className="text-sm font-medium text-foreground">
+                          {gear.provider?.name || "Unknown Provider"}
+                        </div>
+                        <div className="text-xs text-muted-foreground">
+                          {gear.provider?.email || gear.providerId.slice(-8)}
+                        </div>
                       </TableCell>
 
                       {/* Price / Day */}
                       <TableCell className="py-4 px-6 font-bold text-foreground">
                         ${gear.price}
+                      </TableCell>
+
+                      {/* Stock */}
+                      <TableCell className="py-4 px-6 text-sm font-semibold text-foreground">
+                        {gear.stock ?? 0}
                       </TableCell>
 
                       {/* Availability Badge */}

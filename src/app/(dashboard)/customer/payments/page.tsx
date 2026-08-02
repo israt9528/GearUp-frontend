@@ -2,14 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import {
-  Loader2,
-  CreditCard,
-  ReceiptText,
-  ArrowUpRight,
-  ShieldCheck,
-  Wallet,
-} from "lucide-react";
+import { CreditCard, ReceiptText, ShieldCheck, Wallet } from "lucide-react";
 import { paymentApi } from "@/api/payment.api";
 import {
   Card,
@@ -19,7 +12,6 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -28,6 +20,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { CustomerPaymentsSkeleton } from "@/components/skeletons/customerPaymentsSkeleton";
 
 interface PaymentItem {
   id: string;
@@ -76,11 +69,7 @@ export default function CustomerPaymentHistoryPage() {
   };
 
   if (isPending) {
-    return (
-      <div className="flex justify-center items-center min-h-[60vh]">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
+    return <CustomerPaymentsSkeleton />;
   }
 
   if (isError) {
@@ -114,7 +103,7 @@ export default function CustomerPaymentHistoryPage() {
         </div>
 
         {/* Mini Summary Badge Card */}
-        <div className="flex items-center gap-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-5 py-3 rounded-2xl shadow-sm">
+        <div className="flex items-center gap-3 bg-linear-to-r from-blue-600 to-indigo-600 text-white px-5 py-3 rounded-2xl shadow-sm">
           <div className="p-2 bg-white/10 rounded-xl">
             <Wallet className="h-5 w-5 text-white" />
           </div>

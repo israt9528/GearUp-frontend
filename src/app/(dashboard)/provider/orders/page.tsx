@@ -2,7 +2,6 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
-  Loader2,
   ShoppingCart,
   ShieldCheck,
   Calendar,
@@ -31,8 +30,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { RentalStatus } from "@/types/rental.types";
+import { ProviderOrdersSkeleton } from "@/components/skeletons/providerOrdersSkeleton";
 
-export default function ProviderDashboardPage() {
+export default function ProviderOrdersPage() {
   const queryClient = useQueryClient();
 
   const { data: rentalsData, isPending } = useQuery({
@@ -50,11 +50,7 @@ export default function ProviderDashboardPage() {
   });
 
   if (isPending) {
-    return (
-      <div className="flex justify-center items-center min-h-[60vh]">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
+    return <ProviderOrdersSkeleton />;
   }
 
   const myProviderRentals = rentalsData?.data || [];

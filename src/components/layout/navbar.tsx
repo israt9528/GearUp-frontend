@@ -179,7 +179,7 @@ export function Navbar() {
                   <button className="flex items-center gap-2 focus:outline-none rounded-full ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
                     <Avatar className="h-9 w-9 border border-border transition-transform hover:scale-105">
                       <AvatarImage src={""} alt={user.name || "User"} />
-                      <AvatarFallback className="bg-indigo-600 text-white font-semibold text-xs">
+                      <AvatarFallback className="bg-blue-700 text-white font-semibold text-xs">
                         {getInitials(user.name)}
                       </AvatarFallback>
                     </Avatar>

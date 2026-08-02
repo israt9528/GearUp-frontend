@@ -8,7 +8,6 @@ import {
   CheckCircle2,
   DollarSign,
   ArrowUpRight,
-  Loader2,
   ShoppingBag,
   CreditCard,
   ShieldCheck,
@@ -26,6 +25,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { RentalStatus } from "@/types/rental.types";
+import { CustomerOverviewSkeleton } from "@/components/skeletons/customerOverviewSkeleton";
 
 interface RentalItem {
   id: string;
@@ -104,11 +104,7 @@ export default function CustomerOverviewPage() {
   };
 
   if (rentalsLoading || paymentsLoading) {
-    return (
-      <div className="flex justify-center items-center min-h-[50vh]">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
+    return <CustomerOverviewSkeleton />;
   }
 
   const rentals: RentalItem[] = rentalsData?.data || [];

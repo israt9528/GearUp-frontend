@@ -5,7 +5,6 @@ import { useQuery } from "@tanstack/react-query";
 import {
   ChevronLeft,
   ChevronRight,
-  Loader2,
   RotateCcw,
   Search,
   SlidersHorizontal,
@@ -18,6 +17,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { GearItem } from "@/types/gear.types";
+import { GearCardSkeleton } from "@/components/skeletons/gearCardSkeleton";
 
 type GearQueryMeta = {
   page: number;
@@ -291,8 +291,11 @@ export default function BrowseGearPage() {
         </section>
 
         {isPending && (
-          <div className="flex min-h-[38vh] items-center justify-center rounded-2xl border border-sky-100 bg-white shadow-sm">
-            <Loader2 className="h-8 w-8 animate-spin text-emerald-600" />
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {/* Array.from creates 8 dummy items so the screen is filled while loading */}
+            {Array.from({ length: 8 }).map((_, index) => (
+              <GearCardSkeleton key={index} />
+            ))}
           </div>
         )}
 
