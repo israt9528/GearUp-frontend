@@ -70,6 +70,17 @@ export function Navbar() {
         {/* Navigation Links with Active CSS */}
         <div className="hidden md:flex items-center gap-6">
           <Link
+            href="/"
+            className={`flex items-center gap-1.5 text-sm text-blue-950 font-medium transition-colors ${
+              pathname === "/"
+                ? "font-bold border-b-2 border-blue-950 pb-0.5"
+                : "hover:border-b-2 border-blue-950"
+            }`}
+          >
+            <Compass className="h-4 w-4" />
+            Home
+          </Link>
+          <Link
             href="/gear"
             className={`flex items-center gap-1.5 text-sm text-blue-950 font-medium transition-colors ${
               pathname === "/gear"
@@ -107,6 +118,16 @@ export function Navbar() {
         {/* Right Side Actions / User Profile */}
         <div className="flex items-center gap-4">
           <div className="flex md:hidden items-center gap-3">
+            <Link
+              href="/"
+              className={`text-xs text-blue-950 font-medium transition-colors ${
+                pathname === "/"
+                  ? "font-bold border-b border-blue-950 pb-0.5"
+                  : "hover:border-b-2 border-blue-950"
+              }`}
+            >
+              Home
+            </Link>
             <Link
               href="/gear"
               className={`text-xs text-blue-950 font-medium transition-colors ${
