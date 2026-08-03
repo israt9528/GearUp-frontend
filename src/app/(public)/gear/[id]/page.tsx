@@ -17,12 +17,15 @@ import {
   Clock,
   ArrowLeft,
   Loader2,
+  UserCheck,
+  Mail,
 } from "lucide-react";
 import { toast } from "sonner";
 
 import { gearApi } from "@/api/gear.api";
 import { reviewApi } from "@/api/review.api";
 import { rentalApi, CreateRentalDto } from "@/api/rental.api";
+import { GearDetail } from "@/types/gear.types"; // Import your new interface
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -30,7 +33,6 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { GearDetailsSkeleton } from "@/components/skeletons/gearDetailsSkeleton";
-
 export default function GearDetailsPage() {
   const params = useParams();
   const router = useRouter();
@@ -39,6 +41,7 @@ export default function GearDetailsPage() {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
+  // 1. Fetch Gear Data FIRST
   const {
     data: gearData,
     isPending: isGearPending,
@@ -49,6 +52,7 @@ export default function GearDetailsPage() {
     enabled: !!gearId,
   });
 
+  // 2. Fetch Reviews Data SECOND (Before it's used below)
   const { data: reviewsData, isPending: isReviewsPending } = useQuery({
     queryKey: ["gear-reviews", gearId],
     queryFn: () => reviewApi.getGearReviews(gearId),
@@ -72,7 +76,11 @@ export default function GearDetailsPage() {
     },
   });
 
-  const gear = gearData?.data;
+  // 3. Declare derived variables ONCE
+  const gear =
+    gearData && "data" in gearData
+      ? (gearData.data as GearDetail)
+      : (gearData as GearDetail | undefined);
   const reviews = reviewsData?.data || [];
   const dailyPrice = gear?.price || 0;
 
@@ -92,7 +100,6 @@ export default function GearDetailsPage() {
       totalAmount: days * dailyPrice,
     };
   }, [startDate, endDate, gear, dailyPrice]);
-
   if (isGearPending) {
     return <GearDetailsSkeleton />;
   }
@@ -137,33 +144,32 @@ export default function GearDetailsPage() {
     });
   };
 
-  const isUnavailable =
-    gear.isAvailable === false || (gear.stock !== undefined && gear.stock < 1);
+  const isUnavailable = gear.isAvailable === false || gear.stock < 1;
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-7xl space-y-8">
+    <div className="container mx-auto px-4 py-8 max-w-7xl space-y-8 animate-in fade-in duration-300">
       {/* Back Button */}
       <Button
         variant="outline"
         size="sm"
         onClick={() => router.back()}
-        className="gap-1.5 rounded-xl h-9 border-blue-200 bg-blue-100/50 text-blue-900 hover:bg-white"
+        className="gap-1.5 rounded-xl h-9 border-blue-200 bg-blue-50/50 text-blue-900 hover:bg-blue-100 transition-colors"
       >
         <ArrowLeft className="h-4 w-4" /> Back to Browse
       </Button>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-        {/* LEFT COLUMN: Image, Details, & Reviews */}
+        {/* LEFT COLUMN: Image, Details, Provider Info & Reviews */}
         <div className="lg:col-span-2 space-y-8">
           {/* Image Showcase */}
-          <div className="w-full h-80 sm:h-112.5 bg-muted rounded-3xl overflow-hidden border border-border relative shadow-sm">
+          <div className="w-full h-80 sm:h-112.5 bg-muted rounded-3xl overflow-hidden border border-border relative shadow-lg">
             {gear.imageUrl ? (
               <Image
                 src={gear.imageUrl}
                 alt={gear.name}
                 fill
                 unoptimized
-                className="object-cover"
+                className="object-cover transition-transform duration-500 hover:scale-105"
                 priority
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 66vw, 50vw"
               />
@@ -173,9 +179,15 @@ export default function GearDetailsPage() {
                 <span className="text-sm font-medium">No Image Available</span>
               </div>
             )}
-            <div className="absolute top-4 left-4">
-              <Badge className="bg-linear-to-r from-blue-600 to-indigo-600 text-white border-0 shadow-md font-medium px-3 py-1">
+            <div className="absolute top-4 left-4 flex gap-2">
+              <Badge className="bg-linear-to-r from-blue-600 to-indigo-600 text-white border-0 shadow-md font-medium px-3.5 py-1.5 rounded-xl">
                 Verified Equipment
+              </Badge>
+              <Badge
+                variant="secondary"
+                className="backdrop-blur-md bg-white/80 text-blue-950 font-medium px-3 py-1.5 rounded-xl shadow-md border-0"
+              >
+                {gear.category.name}
               </Badge>
             </div>
           </div>
@@ -183,21 +195,19 @@ export default function GearDetailsPage() {
           {/* Core Info */}
           <div className="space-y-4">
             <div className="flex flex-wrap items-center justify-between gap-4">
-              <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-indigo-700 bg-indigo-100 px-3 py-1 rounded-full uppercase tracking-wider">
+              <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-indigo-700 bg-indigo-50 px-3.5 py-1.5 rounded-xl border border-indigo-100 uppercase tracking-wider">
                 <Tag className="h-3 w-3" />
-                {typeof gear.category === "object" && gear.category !== null
-                  ? gear.category.name
-                  : "Equipment"}
+                {gear.category.name}
               </span>
               <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                <div className="flex items-center gap-1 bg-amber-500/10 text-amber-600 dark:text-amber-400 px-3 py-1 rounded-full font-medium">
+                <div className="flex items-center gap-1.5 bg-amber-500/10 text-amber-600 dark:text-amber-400 px-3.5 py-1.5 rounded-xl font-medium">
                   <Star className="h-4 w-4 fill-amber-500 text-amber-500" />
                   <span>{avgRating}</span>
                   <span className="text-xs">({reviews.length} reviews)</span>
                 </div>
-                <div className="flex items-center gap-1 bg-emerald-100 px-3 py-1 rounded-full font-medium text-emerald-700">
-                  <Package className="h-4 w-4 text-emerald-700" />
-                  <span>Stock: {gear.stock || 1} units</span>
+                <div className="flex items-center gap-1.5 bg-emerald-50 px-3.5 py-1.5 rounded-xl font-medium text-emerald-700 border border-emerald-100">
+                  <Package className="h-4 w-4 text-emerald-600" />
+                  <span>Stock: {gear.stock} units</span>
                 </div>
               </div>
             </div>
@@ -206,13 +216,43 @@ export default function GearDetailsPage() {
               {gear.name}
             </h1>
 
+            {/* Provider Details Card - Directly accessible cleanly */}
+            <div className="flex items-center justify-between p-4 rounded-2xl bg-blue-50/50 border border-blue-100 mt-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold text-base shadow-sm">
+                  {gear.provider.name.charAt(0).toUpperCase()}
+                </div>
+                <div>
+                  <div className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">
+                    Equipment Provider
+                  </div>
+                  <div className="text-sm font-bold text-blue-950 flex items-center gap-1.5">
+                    <UserCheck className="h-3.5 w-3.5 text-blue-600" />
+                    {gear.provider.name}
+                  </div>
+                </div>
+              </div>
+              <div className="hidden sm:flex items-center gap-1.5 text-xs text-muted-foreground bg-white px-3 py-2 rounded-xl border border-blue-100 shadow-xs">
+                <Mail className="h-3.5 w-3.5 text-blue-600" />
+                <span>{gear.provider.email}</span>
+              </div>
+            </div>
+
             <Separator className="my-6" />
 
             <div className="space-y-3">
               <h2 className="text-xl font-bold tracking-tight text-blue-950">
                 About this equipment
               </h2>
-              <p className="text-gray-700 text-sm sm:text-base whitespace-pre-wrap leading-relaxed bg-blue-50 p-6 rounded-2xl border border-blue-100">
+              {gear.category.description && (
+                <p className="text-xs text-muted-foreground bg-muted/50 p-3.5 rounded-xl border border-border">
+                  <span className="font-semibold text-foreground">
+                    Category Note:{" "}
+                  </span>
+                  {gear.category.description}
+                </p>
+              )}
+              <p className="text-gray-700 text-sm sm:text-base whitespace-pre-wrap leading-relaxed bg-blue-50/40 p-6 rounded-2xl border border-blue-100">
                 {gear.description || "No description provided for this item."}
               </p>
             </div>
@@ -224,9 +264,9 @@ export default function GearDetailsPage() {
           <div className="space-y-6">
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-bold tracking-tight text-blue-950 flex items-center gap-2">
-                <Sparkles className="h-5 w-5 text-primary" /> Customer Reviews
+                <Sparkles className="h-5 w-5 text-blue-600" /> Customer Reviews
               </h2>
-              <span className="text-xs font-medium text-muted-foreground bg-muted px-3 py-1.5 rounded-lg border border-border">
+              <span className="text-xs font-medium text-muted-foreground bg-muted px-3.5 py-1.5 rounded-xl border border-border">
                 {reviews.length} {reviews.length === 1 ? "Review" : "Reviews"}
               </span>
             </div>
@@ -252,7 +292,10 @@ export default function GearDetailsPage() {
                     className="p-6 rounded-2xl border border-border bg-card shadow-xs space-y-3"
                   >
                     <div className="flex items-center justify-between">
-                      <div className="font-semibold text-foreground text-sm">
+                      <div className="font-semibold text-foreground text-sm flex items-center gap-2">
+                        <div className="w-7 h-7 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-bold">
+                          {(review.customer?.name || "V").charAt(0)}
+                        </div>
                         {review.customer?.name || "Verified Customer"}
                       </div>
                       <div className="text-xs text-muted-foreground">
@@ -286,15 +329,15 @@ export default function GearDetailsPage() {
 
         {/* RIGHT COLUMN: Pricing & Booking Form */}
         <div className="lg:col-span-1">
-          <Card className="sticky top-24 border-border shadow-xl rounded-3xl bg-card overflow-hidden">
-            <div className="bg-blue-800 p-6 text-white">
+          <Card className="sticky top-24 border-border shadow-2xl rounded-3xl bg-card overflow-hidden">
+            <div className="bg-linear-to-r from-blue-900 to-indigo-900 p-6 text-white">
               <div className="flex items-baseline gap-1">
                 <span className="text-3xl sm:text-4xl font-extrabold">
                   ${dailyPrice}
                 </span>
-                <span className="text-blue-100 font-medium text-sm">/ day</span>
+                <span className="text-blue-200 font-medium text-sm">/ day</span>
               </div>
-              <p className="text-xs text-blue-100 mt-1">
+              <p className="text-xs text-blue-200 mt-1">
                 Secure your booking with instant date calculation.
               </p>
             </div>
@@ -304,7 +347,7 @@ export default function GearDetailsPage() {
                 <div className="py-6 text-center space-y-3">
                   <Badge
                     variant="destructive"
-                    className="w-full justify-center py-2.5 text-sm font-semibold rounded-xl"
+                    className="w-full justify-center py-3 text-sm font-semibold rounded-xl"
                   >
                     Currently Out of Stock
                   </Badge>
