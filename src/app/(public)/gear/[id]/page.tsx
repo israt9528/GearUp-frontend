@@ -147,7 +147,7 @@ export default function GearDetailsPage() {
         variant="outline"
         size="sm"
         onClick={() => router.back()}
-        className="gap-1.5 rounded-xl border-border h-9"
+        className="gap-1.5 rounded-xl h-9 border-blue-200 bg-blue-100/50 text-blue-900 hover:bg-white"
       >
         <ArrowLeft className="h-4 w-4" /> Back to Browse
       </Button>
@@ -183,7 +183,7 @@ export default function GearDetailsPage() {
           {/* Core Info */}
           <div className="space-y-4">
             <div className="flex flex-wrap items-center justify-between gap-4">
-              <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary bg-primary/10 px-3 py-1 rounded-full uppercase tracking-wider">
+              <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-indigo-700 bg-indigo-100 px-3 py-1 rounded-full uppercase tracking-wider">
                 <Tag className="h-3 w-3" />
                 {typeof gear.category === "object" && gear.category !== null
                   ? gear.category.name
@@ -195,24 +195,24 @@ export default function GearDetailsPage() {
                   <span>{avgRating}</span>
                   <span className="text-xs">({reviews.length} reviews)</span>
                 </div>
-                <div className="flex items-center gap-1 bg-muted px-3 py-1 rounded-full font-medium text-foreground">
-                  <Package className="h-4 w-4 text-primary" />
+                <div className="flex items-center gap-1 bg-emerald-100 px-3 py-1 rounded-full font-medium text-emerald-700">
+                  <Package className="h-4 w-4 text-emerald-700" />
                   <span>Stock: {gear.stock || 1} units</span>
                 </div>
               </div>
             </div>
 
-            <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground">
+            <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-blue-950">
               {gear.name}
             </h1>
 
             <Separator className="my-6" />
 
             <div className="space-y-3">
-              <h2 className="text-xl font-bold tracking-tight text-foreground">
+              <h2 className="text-xl font-bold tracking-tight text-blue-950">
                 About this equipment
               </h2>
-              <p className="text-muted-foreground text-sm sm:text-base whitespace-pre-wrap leading-relaxed bg-muted/30 p-6 rounded-2xl border border-border">
+              <p className="text-gray-700 text-sm sm:text-base whitespace-pre-wrap leading-relaxed bg-blue-50 p-6 rounded-2xl border border-blue-100">
                 {gear.description || "No description provided for this item."}
               </p>
             </div>
@@ -223,7 +223,7 @@ export default function GearDetailsPage() {
           {/* REVIEWS SECTION */}
           <div className="space-y-6">
             <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-bold tracking-tight text-foreground flex items-center gap-2">
+              <h2 className="text-2xl font-bold tracking-tight text-blue-950 flex items-center gap-2">
                 <Sparkles className="h-5 w-5 text-primary" /> Customer Reviews
               </h2>
               <span className="text-xs font-medium text-muted-foreground bg-muted px-3 py-1.5 rounded-lg border border-border">

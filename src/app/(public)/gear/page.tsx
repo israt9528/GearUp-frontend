@@ -370,7 +370,7 @@ export default function BrowseGearPage() {
                       aria-label={`Go to page ${pageNumber}`}
                       className={
                         pageNumber === page
-                          ? "bg-emerald-600 text-white hover:bg-emerald-700"
+                          ? "bg-blue-800 text-white hover:bg-blue-900"
                           : "border-sky-200 text-sky-700 hover:bg-sky-50"
                       }
                     >
